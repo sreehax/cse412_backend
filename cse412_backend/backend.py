@@ -16,9 +16,15 @@ def index():
 @app.route("/test", methods=['GET'])
 def foo():
     result = db.session.execute(text("SELECT * FROM businesscontact"))
-    a = result.fetchall()
-    b = result.keys()
-    return str(b) + "\n\n" + '\n'.join(str(a).split('), '))
+    results = result.fetchall()
+    keys = list(result.keys())
+    ret = []
+    for result in results:
+        thing = {}
+        for i, part in enumerate(result):
+            thing[keys[i]] = result[i]
+        ret.append(thing)
+    return jsonify(ret)
 
 
 def main():
