@@ -11,7 +11,8 @@ description = "backend for the CSE412 project"
 version = "0.0.1"
 readme = "README.md"
 dependencies = [
-  "flask"
+  "flask",
+  "flask-sqlalchemy",
   "psycopg"
 ]
 
