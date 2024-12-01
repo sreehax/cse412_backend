@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cse412_backend"
+authors = [
+  { name = "Sreehari Sreedev", email = "me@ssree.dev"}
+]
+description = "backend for the CSE412 project"
+version = "0.0.1"
+readme = "README.md"
+dependencies = [
+  "flask"
+  "psycopg"
+]
+
+[project.scripts]
+cse412_backend = "cse412_backend:entry"
