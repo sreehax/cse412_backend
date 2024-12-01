@@ -1,12 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-import json, psycopg
+import json
 
 from sqlalchemy import text
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
-#conn = psycopg.connect("dbname=test user=postgres")
+app.config.from_object('cse412_backend.config.Config')
 
 db = SQLAlchemy(app)
 

@@ -16,6 +16,7 @@ python3Packages.buildPythonApplication {
 
   dependencies = with python3Packages; [
     flask
-    psycopg
+    psycopg2
+    flask-sqlalchemy
   ];
 }

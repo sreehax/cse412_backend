@@ -15,5 +15,13 @@
         packages.cse412_backend = pkgs.callPackage ./package.nix { };
         packages.default = packages.cse412_backend;
       }
-    );
+    ) // {
+      nixosModules.default = {
+        nixpkgs.overlays = [
+	  (final: prev: {
+	    inherit (self.packages.${prev.system}) cse412_backend;
+	  })
+	];
+      };
+    };
 }

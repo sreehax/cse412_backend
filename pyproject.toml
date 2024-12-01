@@ -13,7 +13,7 @@ readme = "README.md"
 dependencies = [
   "flask",
   "flask-sqlalchemy",
-  "psycopg"
+  "psycopg2"
 ]
 
 [project.scripts]
