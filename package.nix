@@ -18,5 +18,6 @@ python3Packages.buildPythonApplication {
     flask
     psycopg2
     flask-sqlalchemy
+    flask-cors
   ];
 }
