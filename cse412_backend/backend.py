@@ -42,7 +42,7 @@ def location(locnum):
         return '', 404
     return jsonify(d[0])
 
-@app.route("/bussinesscontact/<contnum>", methods=['GET'])
+@app.route("/businesscontact/<contnum>", methods=['GET'])
 def bussinesscontact(contnum):
     result = db.session.execute(text("SELECT contFName AS fname, contLName AS lname, contEmail AS email, "
                                      "contWebsite AS website, contPhone AS phone FROM"
