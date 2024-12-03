@@ -45,8 +45,26 @@ def location(locnum):
 @app.route("/businesscontact/<contnum>", methods=['GET'])
 def bussinesscontact(contnum):
     result = db.session.execute(text("SELECT contFName AS fname, contLName AS lname, contEmail AS email, "
-                                     "contWebsite AS website, contPhone AS phone FROM"
+                                     "contWebsite AS website, contPhone AS phone FROM "
                                      "businesscontact WHERE contNum = :contNum"), {"contNum": contnum})
+    d = result_to_dict(result)
+    if len(d) != 1:
+        return '', 404
+    return jsonify(d[0])
+
+@app.route("/employeelist/<locnum>", methods=['GET'])
+def employee_list(locnum):
+    result = db.session.execute(text("SELECT empfname, emplname, empemail AS email, empnum FROM Employee "
+                                     "WHERE emplocnum = :locnum"),
+                                     {'locnum': locnum})
+    d = result_to_dict(result)
+    if len(d) < 1:
+        return '', 404
+    return jsonify(d)
+
+@app.route("/employee/<empnum>", methods=['GET'])
+def employee_data(empnum):
+    result = db.session.execute(text("SELECT * FROM Employee WHERE empnum = :empnum"), {'empnum': empnum})
     d = result_to_dict(result)
     if len(d) != 1:
         return '', 404
