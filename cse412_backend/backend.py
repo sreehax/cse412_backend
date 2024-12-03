@@ -12,16 +12,10 @@ CORS(app)
 db = SQLAlchemy(app)
 
 def result_to_dict(result):
-    results = result.fetchall()
-    keys = list(result.keys())
-    # let me know if there's a better way to do this...
-    ret = []
-    for result in results:
-        thing = {}
-        for i, part in enumerate(result):
-            thing[keys[i]] = result[i]
-        ret.append(thing)
-    return ret
+    _result = result.fetchall()
+    keys = result.keys()
+    return [dict(zip(keys, r)) for r in _result] # fun one-liner
+
 def result_to_json(result):
     return jsonify(result_to_dict(result))
 
@@ -43,6 +37,16 @@ def locations():
 def location(locnum):
     # TODO: join with the appropriate table(s) to get location contact info, employees, and other pertaining info specific to locations.
     result = db.session.execute(text("SELECT locname AS name FROM location WHERE locnum = :num"), {"num": locnum})
+    d = result_to_dict(result)
+    if len(d) != 1:
+        return '', 404
+    return jsonify(d[0])
+
+@app.route("/bussinesscontact/<contnum>", methods=['GET'])
+def bussinesscontact(contnum):
+    result = db.session.execute(text("SELECT contFName AS fname, contLName AS lname, contEmail AS email, "
+                                     "contWebsite AS website, contPhone AS phone FROM"
+                                     "businesscontact WHERE contNum = :contNum"), {"contNum": contnum})
     d = result_to_dict(result)
     if len(d) != 1:
         return '', 404
