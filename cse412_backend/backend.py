@@ -148,6 +148,19 @@ def get_ingredient(locnum):
         return '', 404
     return jsonify(d)
 
+# add an order
+# todo finish this
+@app.route("/order/<locnum>", methods=['POST'])
+def add_order(locnum):
+    if request.is_json:
+        r = request.get_json()
+        ingredients = r.get('ingredients')
+        list_ingredients = ingredients.split(',')
+        num_each = [int(x) for x in r.get('num_each').split(',')]
+        result = db.session.execute("INSERT INTO orders (ordtotal, orddelivered, ordtime, "
+                                    "orddate, ordingnumlist, ordsupnum, ordlocnum, ordnum) VALUES "
+                                    "(:total, '3', '12:00', '12/06/24', :numlist, :supnum, :locnum, )")
+
 
 def main():
     app.run(port=6969)
