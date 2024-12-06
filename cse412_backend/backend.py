@@ -116,9 +116,13 @@ def schedule_del(schednum):
 # get list of employees who work on a certain day
 @app.route("/employee/<location>/<day>", methods=['GET'])
 def workday_data(location, day):
-    result = db.session.execute(text('SELECT empFName, empLName FROM '
+    isone = 69
+    # the effect of this is that if "all" is selected, we get employees working on all days, along with the information on which day they are working
+    if day == "all":
+        isone = 1
+    result = db.session.execute(text('SELECT empFName, empLName, schDay FROM '
                                      'Schedule INNER JOIN Employee ON schEmpNum = empNum '
-                                     'WHERE schDay = :daystr AND emplocnum = :location;'), {'daystr': day, 'location': location})
+                                     'WHERE (schDay = :daystr OR 1 = :isone) AND emplocnum = :location;'), {'daystr': day, 'location': location, 'isone': isone})
     d = result_to_dict(result)
     if len(d) < 0:
         return '', 404
