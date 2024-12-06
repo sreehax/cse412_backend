@@ -118,6 +118,18 @@ def schedule_del(schednum):
         return '', 500
     return '', 200
 
+@app.route("/schedule/add", methods=['PUT'])
+def schedule_add():
+    r = request.get_json()
+    schEmpNum = r["schempnum"]
+    schDay = r["schday"]
+    schEndTime = r["schendtime"]
+    schStartTime = r["schstarttime"]
+    schPay = r["schpay"]
+    db.session.execute(text("INSERT INTO schedule (schPay, schEndTime, schStartTime, schDay, schEmpNum) VALUES (:schPay, :schEndTime, :schStartTime, :schDay, :schEmpNum)"),
+                       {'schPay': schPay, 'schEndTime': schEndTime, 'schStartTime': schStartTime, 'schDay': schDay, 'schEmpNum': schEmpNum})
+    db.session.commit()
+
 
 # DAY_NUM_TO_STR = {
 #     1: 'Sunday',
