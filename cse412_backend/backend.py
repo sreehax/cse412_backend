@@ -68,7 +68,7 @@ def employee_list(locnum):
                                 {'locnum': locnum})
     d = result_to_dict(result)
     if len(d) < 1:
-        return '', 404
+        return '{}', 200
     return jsonify(d)
 
 
@@ -126,17 +126,27 @@ def workday_data(location, day):
     return jsonify(d)
 
 
-@app.route("/employee/pay/<empnum>", methods=['GET'])
-def pay_data(empnum):
-    result = db.session.execute(text('SELECT schEmpNum AS "Employee Number", empFName AS "Employee First Name", '
-                                     'empLName AS "Employee Last Name", SUM(schPay) AS "Total Pay by Employee" '
+@app.route("/employee/pay/", methods=['GET'])
+def pay_data():
+    result = db.session.execute(text('SELECT empFName, '
+                                     'empLName, SUM(schPay) AS "totalPay" '
                                      'FROM Schedule INNER JOIN Employee ON Schedule.schEmpNum = Employee.empNum '
-                                     'WHERE schEmpNum  = :empnum GROUP BY schEmpNum, empFName, empLName;'),
-                                {'empnum': empnum})
+                                     'GROUP BY schEmpNum, empFName, empLName;'),
+                                )
     d = result_to_dict(result)
-    if len(d) != 1:
+    print(d)
+    if len(d) < 1:
         return '', 404
-    return jsonify(d[0])
+    return jsonify(d)
+
+@app.route("/ingredient/<locnum>", methods=['GET'])
+def get_ingredient(locnum):
+    result = db.session.execute(text('SELECT * FROM Ingredient WHERE locnum = :locnum'), {'locnum': locnum})
+    d = result_to_dict(result)
+    print(d)
+    if len(d) < 1:
+        return '', 404
+    return jsonify(d)
 
 
 def main():
