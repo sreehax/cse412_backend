@@ -39,11 +39,16 @@ def locations():
         "SELECT locname AS name, locaddress AS address, loctype, locdatefounded AS datefounded, locnum AS id FROM location"));
     return result_to_json(result)
 
+@app.route("/suppliers", methods=['GET'])
+def suppliers():
+    result = db.session.execute(text(
+        "SELECT supname AS name, supaddress AS address, supcountry AS country, supnum AS id FROM supplier"));
+    return result_to_json(result)
 
 @app.route("/location/<locnum>", methods=['GET'])
 def location(locnum):
     # TODO: join with the appropriate table(s) to get location contact info, employees, and other pertaining info specific to locations.
-    result = db.session.execute(text("SELECT locname AS name FROM location WHERE locnum = :num"), {"num": locnum})
+    result = db.session.execute(text("SELECT locname AS name, locnum AS num FROM location WHERE locnum = :num"), {"num": locnum})
     d = result_to_dict(result)
     if len(d) != 1:
         return '', 404
@@ -163,7 +168,7 @@ def add_order(locnum):
         num_each = [int(x) for x in r.get('num_each').split(',')]
         result = db.session.execute("INSERT INTO orders (ordtotal, orddelivered, ordtime, "
                                     "orddate, ordingnumlist, ordsupnum, ordlocnum, ordnum) VALUES "
-                                    "(:total, '3', '12:00', '12/06/24', :numlist, :supnum, :locnum, )")
+                                    "(:total, :ingredients, '12:00', '12/06/24', :numlist, :supnum, :locnum, )")
 
 
 def main():
