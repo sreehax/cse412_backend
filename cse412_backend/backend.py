@@ -39,11 +39,16 @@ def locations():
         "SELECT locname AS name, locaddress AS address, loctype, locdatefounded AS datefounded, locnum AS id FROM location"));
     return result_to_json(result)
 
+@app.route("/suppliers", methods=['GET'])
+def suppliers():
+    result = db.session.execute(text(
+        "SELECT supname AS name, supaddress AS address, supcountry AS country, supnum AS id FROM supplier"));
+    return result_to_json(result)
 
 @app.route("/location/<locnum>", methods=['GET'])
 def location(locnum):
     # TODO: join with the appropriate table(s) to get location contact info, employees, and other pertaining info specific to locations.
-    result = db.session.execute(text("SELECT locname AS name FROM location WHERE locnum = :num"), {"num": locnum})
+    result = db.session.execute(text("SELECT locname AS name, locnum AS num FROM location WHERE locnum = :num"), {"num": locnum})
     d = result_to_dict(result)
     if len(d) != 1:
         return '', 404
@@ -126,9 +131,13 @@ def schedule_del(schednum):
 # get list of employees who work on a certain day
 @app.route("/employee/<location>/<day>", methods=['GET'])
 def workday_data(location, day):
-    result = db.session.execute(text('SELECT empFName, empLName FROM '
+    isone = 69
+    # the effect of this is that if "all" is selected, we get employees working on all days, along with the information on which day they are working
+    if day == "all":
+        isone = 1
+    result = db.session.execute(text('SELECT empFName, empLName, schDay FROM '
                                      'Schedule INNER JOIN Employee ON schEmpNum = empNum '
-                                     'WHERE schDay = :daystr AND emplocnum = :location;'), {'daystr': day, 'location': location})
+                                     'WHERE (schDay = :daystr OR 1 = :isone) AND emplocnum = :location;'), {'daystr': day, 'location': location, 'isone': isone})
     d = result_to_dict(result)
     if len(d) < 0:
         return '', 404
