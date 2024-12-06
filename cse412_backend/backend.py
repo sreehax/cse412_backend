@@ -120,7 +120,7 @@ def schedule_del(schednum):
 
 @app.route("/schedule/add", methods=['PUT'])
 def schedule_add():
-    r = request.get_json()
+    r = request.json
     schEmpNum = r["schempnum"]
     schDay = r["schday"]
     schEndTime = r["schendtime"]
